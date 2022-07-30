@@ -18,16 +18,25 @@ public class Pembayaran {
     )
     private Long idPembayaran;
     private LocalDate tglBayar;
+    private LocalDate tglDibuat;
     private Integer totalBayar;
     private Long idTransaksi;
+    private String jenisPembayaran;
+    private Boolean lunas;
 
     public Pembayaran() {
+        this.tglDibuat = LocalDate.now();
+        this.tglBayar = null;
+        this.lunas = false;
     }
 
-    public Pembayaran(LocalDate tglBayar, Integer totalBayar, Long idTransaksi) {
+    public Pembayaran(LocalDate tglBayar, LocalDate tglDibuat, Integer totalBayar, Long idTransaksi, String jenisPembayaran, Boolean lunas) {
         this.tglBayar = tglBayar;
+        this.tglDibuat = tglDibuat;
         this.totalBayar = totalBayar;
         this.idTransaksi = idTransaksi;
+        this.jenisPembayaran = jenisPembayaran;
+        this.lunas = lunas;
     }
 
     public Long getIdPembayaran() {
@@ -62,13 +71,40 @@ public class Pembayaran {
         this.idTransaksi = idTransaksi;
     }
 
+    public String getJenisPembayaran() {
+        return jenisPembayaran;
+    }
+
+    public void setJenisPembayaran(String jenisPembayaran) {
+        this.jenisPembayaran = jenisPembayaran;
+    }
+
+    public Boolean getLunas() {
+        return lunas;
+    }
+
+    public void setLunas(Boolean lunas) {
+        this.lunas = lunas;
+    }
+
+    public LocalDate getTglDibuat() {
+        return tglDibuat;
+    }
+
+    public void setTglDibuat(LocalDate tglDibuat) {
+        this.tglDibuat = tglDibuat;
+    }
+
     @Override
     public String toString() {
         return "Pembayaran{" +
                 "idPembayaran=" + idPembayaran +
                 ", tglBayar=" + tglBayar +
+                ", tglDibuat=" + tglDibuat +
                 ", totalBayar=" + totalBayar +
                 ", idTransaksi=" + idTransaksi +
+                ", jenisPembayaran='" + jenisPembayaran + '\'' +
+                ", lunas=" + lunas +
                 '}';
     }
 }

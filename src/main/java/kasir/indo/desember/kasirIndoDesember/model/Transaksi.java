@@ -2,6 +2,7 @@ package kasir.indo.desember.kasirIndoDesember.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity(name = "Transaksi")
 @Table
@@ -17,7 +18,8 @@ public class Transaksi {
             generator = "transaksi_sequence"
     )
     private Long idTransaksi;
-    private Long idBarang;
+    @ElementCollection(targetClass = Long.class)
+    private Set<Long> idBarang;
     private Long idPembeli;
     private LocalDate tanggal;
     private String keterangan;
@@ -25,7 +27,7 @@ public class Transaksi {
     public Transaksi() {
     }
 
-    public Transaksi(Long idBarang, LocalDate tanggal, String keterangan) {
+    public Transaksi(Set<Long> idBarang, LocalDate tanggal, String keterangan) {
         this.idBarang = idBarang;
         this.tanggal = tanggal;
         this.keterangan = keterangan;
@@ -39,11 +41,11 @@ public class Transaksi {
         this.idTransaksi = idTransaksi;
     }
 
-    public Long getIdBarang() {
+    public Set<Long> getIdBarang() {
         return idBarang;
     }
 
-    public void setIdBarang(Long idBarang) {
+    public void setIdBarang(Set<Long> idBarang) {
         this.idBarang = idBarang;
     }
 
