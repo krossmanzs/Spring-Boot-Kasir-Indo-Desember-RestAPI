@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class PembayaranServiceImpl implements PembayaranService {
@@ -29,15 +30,18 @@ public class PembayaranServiceImpl implements PembayaranService {
     @Override
     public void makePembayaran(Long idTransaksi, String jenisPembayaran) {
         Pembayaran pembayaran = new Pembayaran();
+        pembayaran.setIdTransaksi(idTransaksi);
 
         // set total bayar
-        // TODO: 7/30/2022 buat fitur total bayar setelah program transaksi selesai
-        Transaksi transaksi = transaksiRepository.getReferenceById(idTransaksi);
-        List<Barang> listBarang = barangRepository.findAllById(transaksi.getIdBarang());
-
         Integer totalBayar = 0;
-        for (Barang barang : listBarang) {
-            totalBayar += barang.getHarga();
+
+        Optional<Transaksi> transaksi = transaksiRepository.findById(idTransaksi);
+        if (transaksi.isPresent()) {
+
+            List<Barang> listBarang = barangRepository.findAllById(transaksi.get().getIdBarang());
+            for (Barang barang : listBarang) {
+                totalBayar += barang.getHarga();
+            }
         }
 
         pembayaran.setTotalBayar(totalBayar);
@@ -45,6 +49,7 @@ public class PembayaranServiceImpl implements PembayaranService {
         // jenis pembayaran harus berjenis tunai / transfer
         if (pembayaranValid(jenisPembayaran)) {
             pembayaran.setJenisPembayaran(jenisPembayaran);
+            pembayaranRepository.saveAndFlush(pembayaran);
         }
     }
 
@@ -71,6 +76,7 @@ public class PembayaranServiceImpl implements PembayaranService {
     }
 
     @Override
+    @Transactional
     public void updateJenisPembayaran(Long idPembayaran, String jenisPembayaran) {
         Pembayaran pembayaran = pembayaranRepository.findById(idPembayaran).orElseThrow(() -> {
             throw new IllegalStateException("Id pembayaran tidak ditemukan!");

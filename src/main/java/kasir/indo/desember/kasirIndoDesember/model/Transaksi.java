@@ -2,6 +2,7 @@ package kasir.indo.desember.kasirIndoDesember.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Transaksi")
@@ -27,10 +28,11 @@ public class Transaksi {
     public Transaksi() {
     }
 
-    public Transaksi(Set<Long> idBarang, LocalDate tanggal, String keterangan) {
+    public Transaksi(Set<Long> idBarang, Long idPembeli, String keterangan) {
         this.idBarang = idBarang;
-        this.tanggal = tanggal;
-        this.keterangan = keterangan;
+        this.idPembeli = idPembeli;
+        this.keterangan = Objects.requireNonNullElse(keterangan, "--");
+        this.tanggal = LocalDate.now();
     }
 
     public Long getIdTransaksi() {
