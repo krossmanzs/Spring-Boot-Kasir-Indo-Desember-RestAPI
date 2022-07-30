@@ -51,6 +51,7 @@ public class PembeliServiceImpl implements PembeliService {
             throw new IllegalStateException("Format nomor telpon salah!");
         }
 
+        pembeli.setJK(Character.toUpperCase(jk));
         pembeliRepository.save(pembeli);
     }
 
@@ -83,7 +84,7 @@ public class PembeliServiceImpl implements PembeliService {
             if (!(jk.equals('l') || jk.equals('p'))) {
                 throw new IllegalStateException("JK harus bernilai Laki-laki(L) atau Perempuan(P)!");
             }
-            pembeli.setJK(jk);
+            pembeli.setJK(Character.toUpperCase(jk));
         }
 
         if (noTelp != null &&
