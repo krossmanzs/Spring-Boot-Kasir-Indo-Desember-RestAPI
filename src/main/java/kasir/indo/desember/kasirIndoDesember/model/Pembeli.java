@@ -7,28 +7,36 @@ import javax.persistence.*;
 public class Pembeli {
     @Id
     @SequenceGenerator(
-            name = "pembayaran_sequence",
-            sequenceName = "pembayaran_sequence",
+            name = "pembeli_sequence",
+            sequenceName = "pembeli_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "pembayaran_sequence"
+            generator = "pembeli_sequence"
     )
     private Long idPembeli;
     private String nama;
     private Character JK;
-    private Integer noTelpon;
+    private String noTelpon;
     private String alamat;
 
     public Pembeli() {
     }
 
-    public Pembeli(String nama, Character JK, Integer noTelpon, String alamat) {
+    public Pembeli(String nama, Character JK, String noTelpon, String alamat) {
         this.nama = nama;
         this.JK = JK;
         this.noTelpon = noTelpon;
         this.alamat = alamat;
+    }
+
+    public Long getIdPembeli() {
+        return idPembeli;
+    }
+
+    public void setIdPembeli(Long idPembeli) {
+        this.idPembeli = idPembeli;
     }
 
     public String getNama() {
@@ -47,11 +55,11 @@ public class Pembeli {
         this.JK = JK;
     }
 
-    public Integer getNoTelpon() {
+    public String getNoTelpon() {
         return noTelpon;
     }
 
-    public void setNoTelpon(Integer noTelpon) {
+    public void setNoTelpon(String noTelpon) {
         this.noTelpon = noTelpon;
     }
 
