@@ -14,6 +14,5 @@ public interface PembeliService {
 
     public void deletePembeli(Long idPembeli);
 
-    @Transactional
     public void updatePembeli(Long idPembeli, String nama, Character jk, String noTelp, String alamat);
 }

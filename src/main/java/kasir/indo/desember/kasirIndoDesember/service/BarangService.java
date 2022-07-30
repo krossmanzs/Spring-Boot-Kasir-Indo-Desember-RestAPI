@@ -13,6 +13,5 @@ public interface BarangService {
 
     public void deleteBarang(Long idBarang);
 
-    @Transactional
     public void updateBarang(Long idBarang, String nama, Integer harga, Integer stok);
 }
