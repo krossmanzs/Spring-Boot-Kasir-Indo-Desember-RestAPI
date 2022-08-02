@@ -1,5 +1,8 @@
 package kasir.indo.desember.kasirIndoDesember.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Map;
@@ -79,7 +82,8 @@ public class Transaksi {
     public String toString() {
         return "Transaksi{" +
                 "idTransaksi=" + idTransaksi +
-                ", idBarang=" + keranjang +
+                ", keranjang=" + keranjang +
+                ", idPembeli=" + idPembeli +
                 ", tanggal=" + tanggal +
                 ", keterangan='" + keterangan + '\'' +
                 '}';

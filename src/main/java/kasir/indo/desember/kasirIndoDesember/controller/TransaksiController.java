@@ -2,6 +2,7 @@ package kasir.indo.desember.kasirIndoDesember.controller;
 
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
 import kasir.indo.desember.kasirIndoDesember.model.dto.Cart;
+import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
 import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,15 @@ public class TransaksiController {
         return transaksiService.getAllTransaksi();
     }
 
+//    @GetMapping(path = "/{id_transaksi}")
+//    public Transaksi getTransaksi(@PathVariable("id_transaksi") Long idTransaksi) {
+//        return transaksiService.getTransaksi(idTransaksi);
+//    }
+
     @GetMapping(path = "/{id_transaksi}")
-    public Transaksi getTransaksi(@PathVariable("id_transaksi") Long idTransaksi) {
-        return transaksiService.getTransaksi(idTransaksi);
+    public DetailTransaksi getTransaksi(@PathVariable("id_transaksi") Long idTransaksi) {
+//        Transaksi transaksi = transaksiService.getTransaksi(idTransaksi);
+         return transaksiService.getTransaksi(idTransaksi);
     }
 
     @PostMapping(path = "/buat/{id_pembeli}")

@@ -1,6 +1,7 @@
 package kasir.indo.desember.kasirIndoDesember.service;
 
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
+import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ public interface TransaksiService {
 
     public List<Transaksi> getAllTransaksi();
 
-    public Transaksi getTransaksi(Long idTransaksi);
+    public DetailTransaksi getTransaksi(Long idTransaksi);
 
     public void makeTransaksi(
             Long idPembeli,

@@ -1,7 +1,10 @@
 package kasir.indo.desember.kasirIndoDesember.service.impl;
 
+import kasir.indo.desember.kasirIndoDesember.model.Barang;
 import kasir.indo.desember.kasirIndoDesember.model.Pembayaran;
+import kasir.indo.desember.kasirIndoDesember.model.Pembeli;
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
+import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
 import kasir.indo.desember.kasirIndoDesember.repository.BarangRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembayaranRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembeliRepository;
@@ -11,6 +14,7 @@ import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -36,10 +40,41 @@ public class TransaksiServiceImpl implements TransaksiService {
     }
 
     @Override
-    public Transaksi getTransaksi(Long idTransaksi) {
-        return transaksiRepository.findById(idTransaksi).orElseThrow(() -> {
+    public DetailTransaksi getTransaksi(Long idTransaksi) {
+        Transaksi transaksi = transaksiRepository.findById(idTransaksi).orElseThrow(() -> {
             throw new IllegalStateException("Id transaksi tidak ditemukan!");
         });
+
+        Pembeli pembeli = pembeliRepository.findById(transaksi.getIdPembeli()).orElseThrow(() -> {
+            throw new IllegalStateException("Id pembeli tidak ditemukan!");
+        });
+
+        Pembayaran pembayaran = pembayaranRepository.findByIdTransaksi(transaksi.getIdTransaksi()).orElseThrow(() -> {
+            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
+        });
+
+        DetailTransaksi detailTransaksi = new DetailTransaksi();
+        // get barang dan totalnya
+        Map<String, Integer> mapBarang = new HashMap<>();
+        for (Map.Entry<Long, Integer> entryBarang : transaksi.getKeranjang().entrySet()) {
+            Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
+                throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
+            });
+
+            mapBarang.put(barang.getNamaBarang(), entryBarang.getValue());
+        }
+
+        detailTransaksi.setBarang(mapBarang);
+        detailTransaksi.setNamaPembeli(pembeli.getNama());
+        detailTransaksi.setNoTelpon(pembeli.getNoTelpon());
+        detailTransaksi.setKeterangan(transaksi.getKeterangan());
+        detailTransaksi.setTglDibuat(pembayaran.getTglDibuat());
+        detailTransaksi.setTglBayar(pembayaran.getTglBayar());
+        detailTransaksi.setTotalBayar(pembayaran.getTotalBayar());
+        detailTransaksi.setJenisPembayaran(pembayaran.getJenisPembayaran());
+        detailTransaksi.setLunas(pembayaran.getLunas());
+
+        return detailTransaksi;
     }
 
     @Override
