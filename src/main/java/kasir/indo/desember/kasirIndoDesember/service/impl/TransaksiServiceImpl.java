@@ -4,7 +4,7 @@ import kasir.indo.desember.kasirIndoDesember.model.Barang;
 import kasir.indo.desember.kasirIndoDesember.model.Pembayaran;
 import kasir.indo.desember.kasirIndoDesember.model.Pembeli;
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
-import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
+import kasir.indo.desember.kasirIndoDesember.dto.DetailTransaksi;
 import kasir.indo.desember.kasirIndoDesember.repository.BarangRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembayaranRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembeliRepository;
@@ -14,7 +14,6 @@ import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service

@@ -1,11 +1,10 @@
 package kasir.indo.desember.kasirIndoDesember.service;
 
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
-import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
+import kasir.indo.desember.kasirIndoDesember.dto.DetailTransaksi;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface TransaksiService {
 

@@ -1,4 +1,4 @@
-package kasir.indo.desember.kasirIndoDesember.model.dto;
+package kasir.indo.desember.kasirIndoDesember.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;

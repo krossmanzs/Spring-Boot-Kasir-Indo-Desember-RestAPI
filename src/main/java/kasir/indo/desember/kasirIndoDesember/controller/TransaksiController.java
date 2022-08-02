@@ -1,8 +1,8 @@
 package kasir.indo.desember.kasirIndoDesember.controller;
 
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
-import kasir.indo.desember.kasirIndoDesember.model.dto.Cart;
-import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
+import kasir.indo.desember.kasirIndoDesember.dto.Cart;
+import kasir.indo.desember.kasirIndoDesember.dto.DetailTransaksi;
 import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
