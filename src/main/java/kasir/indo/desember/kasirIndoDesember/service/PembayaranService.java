@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface PembayaranService {
-    public void makePembayaran(Long idTransaksi, String jenisPembayaran);
+    public void makePembayaran(Long idTransaksi, String jenisPembayaran, Transaksi transaksi);
 
     public Pembayaran getPembayaran(Long idPembayaran);
 

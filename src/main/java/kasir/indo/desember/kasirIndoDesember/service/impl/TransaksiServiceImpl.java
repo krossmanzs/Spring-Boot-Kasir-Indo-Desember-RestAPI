@@ -65,7 +65,8 @@ public class TransaksiServiceImpl implements TransaksiService {
 
             pembayaranService.makePembayaran(
                     transaksiRepository.getNextValTransaksiSequence(),
-                    jenisPembayaran
+                    jenisPembayaran,
+                    transaksi
             );
         }
 

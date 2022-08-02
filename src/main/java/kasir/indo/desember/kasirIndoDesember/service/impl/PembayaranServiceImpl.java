@@ -29,23 +29,30 @@ public class PembayaranServiceImpl implements PembayaranService {
     private TransaksiRepository transaksiRepository;
 
     @Override
-    public void makePembayaran(Long idTransaksi, String jenisPembayaran) {
+    @Transactional
+    public void makePembayaran(Long idTransaksi, String jenisPembayaran, Transaksi transaksi) {
         Pembayaran pembayaran = new Pembayaran();
         pembayaran.setIdTransaksi(idTransaksi);
 
         // set total bayar
         int totalBayar = 0;
 
-        Optional<Transaksi> transaksi = transaksiRepository.findById(idTransaksi);
-        if (transaksi.isPresent()) {
+        for (Map.Entry<Long, Integer> entryBarang : transaksi.getKeranjang().entrySet()) {
+            Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
+                throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
+            });
 
-            for (Map.Entry<Long, Integer> entryBarang : transaksi.get().getKeranjang().entrySet()) {
-                Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
-                    throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
-                });
-                int jumlahBeli = entryBarang.getValue();
-                totalBayar += barang.getHarga() * jumlahBeli;
+            int jumlahBeli = entryBarang.getValue();
+
+            // cek ketersediaan barang
+            if (jumlahBeli > barang.getStok()) {
+                throw new IllegalStateException("Anda melebihi jumlah stok untuk barang " + barang.getNamaBarang());
+            } if (barang.getStok() <= 0) {
+                throw new IllegalStateException("Stok untuk barang " + barang.getNamaBarang() + " sudah habis!");
             }
+
+            totalBayar += barang.getHarga() * jumlahBeli;
+            barang.setStok(barang.getStok() - jumlahBeli);
         }
 
         pembayaran.setTotalBayar(totalBayar);
