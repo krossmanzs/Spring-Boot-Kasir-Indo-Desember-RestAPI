@@ -22,7 +22,7 @@ public class Transaksi {
             generator = "transaksi_sequence"
     )
     private Long idTransaksi;
-    @ElementCollection
+    @ElementCollection()
     private Map<Long, Integer> keranjang;
     private Long idPembeli;
     private LocalDate tanggal;

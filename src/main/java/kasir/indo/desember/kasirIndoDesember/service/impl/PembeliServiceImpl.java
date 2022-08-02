@@ -1,5 +1,8 @@
 package kasir.indo.desember.kasirIndoDesember.service.impl;
 
+import kasir.indo.desember.kasirIndoDesember.exception.BadRequestException;
+import kasir.indo.desember.kasirIndoDesember.exception.ConflictException;
+import kasir.indo.desember.kasirIndoDesember.exception.ResourceNotFoundException;
 import kasir.indo.desember.kasirIndoDesember.model.Pembeli;
 import kasir.indo.desember.kasirIndoDesember.repository.PembeliRepository;
 import kasir.indo.desember.kasirIndoDesember.service.PembeliService;
@@ -23,7 +26,7 @@ public class PembeliServiceImpl implements PembeliService {
     @Override
     public Pembeli getPembeli(Long idPembeli) {
         return pembeliRepository.findById(idPembeli).orElseThrow(
-                () -> new IllegalStateException("Pembeli dengan id " + idPembeli + " tidak ditemukan!")
+                () -> new ResourceNotFoundException("Pembeli dengan id " + idPembeli + " tidak ditemukan!")
         );
     }
 
@@ -36,19 +39,19 @@ public class PembeliServiceImpl implements PembeliService {
         System.out.println(noTelp.length());
 
         if (!(jk.equals('l') || jk.equals('p'))) {
-            throw new IllegalStateException("JK harus bernilai Laki-laki(L) atau Perempuan(P)!");
+            throw new BadRequestException("JK harus bernilai Laki-laki(L) atau Perempuan(P)!");
         }
 
         if (noTelp.length() < 10) {
-            throw new IllegalStateException("No telpon tidak boleh kurang dari 10 digit!");
+            throw new BadRequestException("No telpon tidak boleh kurang dari 10 digit!");
         }
 
         if (noTelp.length() > 12) {
-            throw new IllegalStateException("No telpon tidak boleh lebih dari 12 digit!");
+            throw new BadRequestException("No telpon tidak boleh lebih dari 12 digit!");
         }
 
         if (!StringUtils.isNumeric(noTelp)) {
-            throw new IllegalStateException("Format nomor telpon salah!");
+            throw new BadRequestException("Format nomor telpon salah!");
         }
 
         pembeli.setJK(Character.toUpperCase(jk));
@@ -60,7 +63,7 @@ public class PembeliServiceImpl implements PembeliService {
         boolean exist = pembeliRepository.findById(idPembeli).isPresent();
 
         if (!exist) {
-            throw new IllegalStateException("Pembeli sudah dengan id " + idPembeli + " sudah ada!");
+            throw new ResourceNotFoundException("Pembeli sudah dengan id " + idPembeli + " sudah ada!");
         }
 
         pembeliRepository.deleteById(idPembeli);
@@ -70,7 +73,7 @@ public class PembeliServiceImpl implements PembeliService {
     @Transactional
     public void updatePembeli(Long idPembeli, String nama, Character jk, String noTelp, String alamat) {
         Pembeli pembeli = pembeliRepository.findById(idPembeli).orElseThrow(() -> {
-            throw new IllegalStateException("Pembeli sudah dengan id " + idPembeli + " sudah ada!");
+            throw new ConflictException("Pembeli dengan id " + idPembeli + " sudah ada!");
         });
 
         System.out.println(pembeli);
@@ -82,7 +85,7 @@ public class PembeliServiceImpl implements PembeliService {
 
         if (jk != null) {
             if (!(jk.equals('l') || jk.equals('p'))) {
-                throw new IllegalStateException("JK harus bernilai Laki-laki(L) atau Perempuan(P)!");
+                throw new BadRequestException("JK harus bernilai Laki-laki(L) atau Perempuan(P)!");
             }
             pembeli.setJK(Character.toUpperCase(jk));
         }
@@ -91,11 +94,11 @@ public class PembeliServiceImpl implements PembeliService {
                 noTelp.length() > 0) {
 
             if (noTelp.length() > 12) {
-                throw new IllegalStateException("No telpon tidak boleh lebih dari 12 digit!");
+                throw new BadRequestException("No telpon tidak boleh lebih dari 12 digit!");
             }
 
             if (!StringUtils.isNumeric(noTelp)) {
-                throw new IllegalStateException("Format nomor telpon salah!");
+                throw new BadRequestException("Format nomor telpon salah!");
             }
 
             pembeli.setNoTelpon(noTelp);

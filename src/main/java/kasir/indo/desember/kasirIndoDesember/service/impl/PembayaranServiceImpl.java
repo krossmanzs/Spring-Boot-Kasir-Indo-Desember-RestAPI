@@ -1,5 +1,7 @@
 package kasir.indo.desember.kasirIndoDesember.service.impl;
 
+import kasir.indo.desember.kasirIndoDesember.exception.BadRequestException;
+import kasir.indo.desember.kasirIndoDesember.exception.ResourceNotFoundException;
 import kasir.indo.desember.kasirIndoDesember.model.Barang;
 import kasir.indo.desember.kasirIndoDesember.model.Pembayaran;
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class PembayaranServiceImpl implements PembayaranService {
@@ -40,16 +41,16 @@ public class PembayaranServiceImpl implements PembayaranService {
 
         for (Map.Entry<Long, Integer> entryBarang : transaksi.getKeranjang().entrySet()) {
             Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
-                throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
+                throw new ResourceNotFoundException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
             });
 
             int jumlahBeli = entryBarang.getValue();
 
             // cek ketersediaan barang
             if (jumlahBeli > barang.getStok()) {
-                throw new IllegalStateException("Anda melebihi jumlah stok untuk barang " + barang.getNamaBarang());
+                throw new ResourceNotFoundException("Anda melebihi jumlah stok untuk barang " + barang.getNamaBarang());
             } if (barang.getStok() <= 0) {
-                throw new IllegalStateException("Stok untuk barang " + barang.getNamaBarang() + " sudah habis!");
+                throw new ResourceNotFoundException("Stok untuk barang " + barang.getNamaBarang() + " sudah habis!");
             }
 
             totalBayar += barang.getHarga() * jumlahBeli;
@@ -68,7 +69,8 @@ public class PembayaranServiceImpl implements PembayaranService {
     @Override
     public Pembayaran getPembayaran(Long idPembayaran) {
         return pembayaranRepository.findById(idPembayaran).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
+            throw new ResourceNotFoundException("Id pembayaran tidak ditemukan!");
+//            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
         });
     }
 
@@ -81,7 +83,7 @@ public class PembayaranServiceImpl implements PembayaranService {
     @Transactional
     public void setLunasPembayaran(Long idPembayaran) {
         Pembayaran pembayaran = pembayaranRepository.findById(idPembayaran).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
+            throw new ResourceNotFoundException(String.format("Id pembayaran: %d tidak ditemukan!", idPembayaran));
         });
 
         pembayaran.setTglBayar(LocalDate.now());
@@ -92,7 +94,7 @@ public class PembayaranServiceImpl implements PembayaranService {
     @Transactional
     public void updateJenisPembayaran(Long idPembayaran, String jenisPembayaran) {
         Pembayaran pembayaran = pembayaranRepository.findById(idPembayaran).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
+            throw new ResourceNotFoundException(String.format("Id pembayaran: %d tidak ditemukan!", idPembayaran));
         });
 
         if (pembayaranValid(jenisPembayaran)) {
@@ -105,7 +107,7 @@ public class PembayaranServiceImpl implements PembayaranService {
                 jenisPembayaran.toLowerCase(Locale.ROOT).equals("transfer")) {
             return true;
         } else {
-            throw new IllegalStateException("Jenis pembayaran harus berjenis Tunai atau Transfer!");
+            throw new BadRequestException("Jenis pembayaran harus berjenis Tunai atau Transfer!");
         }
     }
 }

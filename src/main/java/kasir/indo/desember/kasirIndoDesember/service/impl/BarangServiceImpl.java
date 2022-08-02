@@ -1,5 +1,6 @@
 package kasir.indo.desember.kasirIndoDesember.service.impl;
 
+import kasir.indo.desember.kasirIndoDesember.exception.ResourceNotFoundException;
 import kasir.indo.desember.kasirIndoDesember.model.Barang;
 import kasir.indo.desember.kasirIndoDesember.repository.BarangRepository;
 import kasir.indo.desember.kasirIndoDesember.service.BarangService;
@@ -23,7 +24,7 @@ public class BarangServiceImpl implements BarangService {
     public void addNewBarang(Barang barang) {
         if (barang.getNamaBarang().isEmpty() ||
                 barang.getStok() == null) {
-            throw new IllegalStateException("Bad Request");
+            throw new ResourceNotFoundException("Stok " + barang.getNamaBarang() + " habis!");
         }
 
         barangRepository.save(barang);
@@ -32,8 +33,8 @@ public class BarangServiceImpl implements BarangService {
     @Override
     public void deleteBarang(Long idBarang) {
         Barang barang = barangRepository.findById(idBarang)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Barang tidak ditemukan!"
+                .orElseThrow(() -> new ResourceNotFoundException(
+                         String.format("Barang dengan id:%d tidak ditemukan!", idBarang)
                 ));
 
         barangRepository.deleteById(idBarang);
@@ -43,12 +44,9 @@ public class BarangServiceImpl implements BarangService {
     @Transactional
     public void updateBarang(Long idBarang, String nama, Integer harga, Integer stok) {
         Barang barang = barangRepository.findById(idBarang)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Barang tidak ditemukan!"
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Barang dengan id:%d tidak ditemukan!", idBarang)
                 ));
-
-        System.out.println(barang);
-        System.out.printf("%d %s %d %d \n", idBarang, nama, harga, stok);
 
         if (nama != null && nama.length() > 0) {
             barang.setNamaBarang(nama);

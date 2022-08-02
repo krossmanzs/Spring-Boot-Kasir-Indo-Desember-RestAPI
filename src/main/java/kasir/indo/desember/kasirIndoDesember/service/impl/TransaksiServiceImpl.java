@@ -1,10 +1,12 @@
 package kasir.indo.desember.kasirIndoDesember.service.impl;
 
+import kasir.indo.desember.kasirIndoDesember.exception.BadRequestException;
+import kasir.indo.desember.kasirIndoDesember.exception.ResourceNotFoundException;
 import kasir.indo.desember.kasirIndoDesember.model.Barang;
 import kasir.indo.desember.kasirIndoDesember.model.Pembayaran;
 import kasir.indo.desember.kasirIndoDesember.model.Pembeli;
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
-import kasir.indo.desember.kasirIndoDesember.model.dto.DetailTransaksi;
+import kasir.indo.desember.kasirIndoDesember.dto.DetailTransaksi;
 import kasir.indo.desember.kasirIndoDesember.repository.BarangRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembayaranRepository;
 import kasir.indo.desember.kasirIndoDesember.repository.PembeliRepository;
@@ -14,7 +16,6 @@ import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -42,15 +43,15 @@ public class TransaksiServiceImpl implements TransaksiService {
     @Override
     public DetailTransaksi getTransaksi(Long idTransaksi) {
         Transaksi transaksi = transaksiRepository.findById(idTransaksi).orElseThrow(() -> {
-            throw new IllegalStateException("Id transaksi tidak ditemukan!");
+            throw new ResourceNotFoundException("Id transaksi tidak ditemukan!");
         });
 
         Pembeli pembeli = pembeliRepository.findById(transaksi.getIdPembeli()).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembeli tidak ditemukan!");
+            throw new ResourceNotFoundException("Id pembeli tidak ditemukan!");
         });
 
         Pembayaran pembayaran = pembayaranRepository.findByIdTransaksi(transaksi.getIdTransaksi()).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembayaran tidak ditemukan!");
+            throw new ResourceNotFoundException("Id pembayaran tidak ditemukan!");
         });
 
         DetailTransaksi detailTransaksi = new DetailTransaksi();
@@ -58,7 +59,7 @@ public class TransaksiServiceImpl implements TransaksiService {
         Map<String, Integer> mapBarang = new HashMap<>();
         for (Map.Entry<Long, Integer> entryBarang : transaksi.getKeranjang().entrySet()) {
             Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
-                throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
+                throw new ResourceNotFoundException("Barang dengan id: " + entryBarang.getKey() + " tidak ditemukan!");
             });
 
             mapBarang.put(barang.getNamaBarang(), entryBarang.getValue());
@@ -86,14 +87,14 @@ public class TransaksiServiceImpl implements TransaksiService {
 
         // verification for id_transaksi/id_barang/id_pembeli
         pembeliRepository.findById(transaksi.getIdPembeli()).orElseThrow(() -> {
-            throw new IllegalStateException("Id pembeli tidak ditemukan!");
+            throw new ResourceNotFoundException("Id pembeli tidak ditemukan!");
         });
 
-        barangRepository.findAllById(keranjang.keySet()).forEach(barang -> {
-            if (barang == null) {
-                throw new IllegalStateException("Barang dengan id " + barang.getIdBarang() + " tidak ditemukan!");
-            }
-        });
+        for (Map.Entry<Long, Integer> entryBarang : keranjang.entrySet()) {
+            Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
+                throw new ResourceNotFoundException("Barang dengan id: " + entryBarang.getKey() + " tidak ditemukan!");
+            });
+        }
 
         if (pembayaranValid(jenisPembayaran)) {
             transaksiRepository.save(transaksi);
@@ -119,7 +120,7 @@ public class TransaksiServiceImpl implements TransaksiService {
                 jenisPembayaran.toLowerCase(Locale.ROOT).equals("transfer")) {
             return true;
         } else {
-            throw new IllegalStateException("Jenis pembayaran harus berjenis Tunai atau Transfer!");
+            throw new BadRequestException("Jenis pembayaran harus berjenis Tunai atau Transfer!");
         }
     }
 }

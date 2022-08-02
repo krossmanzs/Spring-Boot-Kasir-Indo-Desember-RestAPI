@@ -5,6 +5,7 @@ import kasir.indo.desember.kasirIndoDesember.service.BarangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class BarangController {
     }
 
     @PostMapping(path = "/tambah")
-    public void addBarang(@RequestBody Barang barang) {
+    public void addBarang(@Valid @RequestBody Barang barang) {
         barangService.addNewBarang(barang);
     }
 

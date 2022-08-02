@@ -1,6 +1,7 @@
 package kasir.indo.desember.kasirIndoDesember.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity(name = "Barang")
 @Table
@@ -17,7 +18,9 @@ public class Barang {
     )
     private Long idBarang;
     private String namaBarang;
+    @Min(1000)
     private Integer harga;
+    @Min(1)
     private Integer stok;
 
     public Barang() {

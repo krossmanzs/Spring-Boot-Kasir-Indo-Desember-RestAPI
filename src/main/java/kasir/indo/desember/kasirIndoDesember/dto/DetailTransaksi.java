@@ -1,4 +1,4 @@
-package kasir.indo.desember.kasirIndoDesember.model.dto;
+package kasir.indo.desember.kasirIndoDesember.dto;
 
 import java.time.LocalDate;
 import java.util.Map;
