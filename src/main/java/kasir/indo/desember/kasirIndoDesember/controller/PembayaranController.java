@@ -28,6 +28,11 @@ public class PembayaranController {
 
     // Pelunasan pembayaran hanya server side saja
 
+    @PostMapping(path = "/lunas/{id_pembayaran}")
+    public void lunasPembayaran(@PathVariable("id_pembayaran") Long idPembayaran) {
+        pembayaranService.setLunasPembayaran(idPembayaran);
+    }
+
     @PutMapping(path = "/update/{id_pembayaran}/{jenis_pembayaran}")
     public void updateJenisPembayaran(
             @PathVariable("id_pembayaran") Long idPembayaran,
