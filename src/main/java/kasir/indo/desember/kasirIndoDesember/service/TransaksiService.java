@@ -3,6 +3,7 @@ package kasir.indo.desember.kasirIndoDesember.service;
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface TransaksiService {
@@ -13,7 +14,7 @@ public interface TransaksiService {
 
     public void makeTransaksi(
             Long idPembeli,
-            Set<Long> idBarang,
+            Map<Long, Integer> idBarang,
             String jenisPembayaran,
             String keterangan
     );

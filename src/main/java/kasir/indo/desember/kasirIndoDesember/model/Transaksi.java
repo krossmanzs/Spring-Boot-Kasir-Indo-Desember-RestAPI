@@ -2,8 +2,8 @@ package kasir.indo.desember.kasirIndoDesember.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity(name = "Transaksi")
 @Table
@@ -19,8 +19,8 @@ public class Transaksi {
             generator = "transaksi_sequence"
     )
     private Long idTransaksi;
-    @ElementCollection(targetClass = Long.class)
-    private Set<Long> idBarang;
+    @ElementCollection
+    private Map<Long, Integer> keranjang;
     private Long idPembeli;
     private LocalDate tanggal;
     private String keterangan;
@@ -28,8 +28,8 @@ public class Transaksi {
     public Transaksi() {
     }
 
-    public Transaksi(Set<Long> idBarang, Long idPembeli, String keterangan) {
-        this.idBarang = idBarang;
+    public Transaksi(Map<Long, Integer> keranjang, Long idPembeli, String keterangan) {
+        this.keranjang = keranjang;
         this.idPembeli = idPembeli;
         this.keterangan = Objects.requireNonNullElse(keterangan, "--");
         this.tanggal = LocalDate.now();
@@ -43,12 +43,12 @@ public class Transaksi {
         this.idTransaksi = idTransaksi;
     }
 
-    public Set<Long> getIdBarang() {
-        return idBarang;
+    public Map<Long, Integer> getKeranjang() {
+        return keranjang;
     }
 
-    public void setIdBarang(Set<Long> idBarang) {
-        this.idBarang = idBarang;
+    public void setKeranjang(Map<Long, Integer> keranjang) {
+        this.keranjang = keranjang;
     }
 
     public Long getIdPembeli() {
@@ -79,7 +79,7 @@ public class Transaksi {
     public String toString() {
         return "Transaksi{" +
                 "idTransaksi=" + idTransaksi +
-                ", idBarang=" + idBarang +
+                ", idBarang=" + keranjang +
                 ", tanggal=" + tanggal +
                 ", keterangan='" + keterangan + '\'' +
                 '}';

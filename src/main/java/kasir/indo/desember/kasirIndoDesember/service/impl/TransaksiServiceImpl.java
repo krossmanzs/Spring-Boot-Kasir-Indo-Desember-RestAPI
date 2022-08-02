@@ -11,10 +11,7 @@ import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TransaksiServiceImpl implements TransaksiService {
@@ -46,16 +43,18 @@ public class TransaksiServiceImpl implements TransaksiService {
     }
 
     @Override
-    public void makeTransaksi(Long idPembeli, Set<Long> idBarang, String jenisPembayaran, String keterangan) {
-        Transaksi transaksi = new Transaksi(idBarang, idPembeli, keterangan);
-        System.out.println(transaksi);
+    public void makeTransaksi(Long idPembeli,
+                              Map<Long, Integer> keranjang,
+                              String jenisPembayaran,
+                              String keterangan) {
+        Transaksi transaksi = new Transaksi(keranjang, idPembeli, keterangan);
 
         // verification for id_transaksi/id_barang/id_pembeli
         pembeliRepository.findById(transaksi.getIdPembeli()).orElseThrow(() -> {
             throw new IllegalStateException("Id pembeli tidak ditemukan!");
         });
 
-        barangRepository.findAllById(transaksi.getIdBarang()).forEach(barang -> {
+        barangRepository.findAllById(keranjang.keySet()).forEach(barang -> {
             if (barang == null) {
                 throw new IllegalStateException("Barang dengan id " + barang.getIdBarang() + " tidak ditemukan!");
             }

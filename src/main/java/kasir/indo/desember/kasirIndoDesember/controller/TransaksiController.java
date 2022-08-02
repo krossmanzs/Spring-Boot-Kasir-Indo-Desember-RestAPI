@@ -1,7 +1,7 @@
 package kasir.indo.desember.kasirIndoDesember.controller;
 
 import kasir.indo.desember.kasirIndoDesember.model.Transaksi;
-import kasir.indo.desember.kasirIndoDesember.model.wrapper.BarangWrapper;
+import kasir.indo.desember.kasirIndoDesember.model.dto.Cart;
 import kasir.indo.desember.kasirIndoDesember.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +28,13 @@ public class TransaksiController {
     @PostMapping(path = "/buat/{id_pembeli}")
     public void makeTransaksi(
             @PathVariable("id_pembeli") Long idPembeli,
-            @RequestBody BarangWrapper barangWrapper
+            @RequestBody Cart cart
     ) {
         transaksiService.makeTransaksi(
                 idPembeli,
-                barangWrapper.getIdBarang(),
-                barangWrapper.getJenisPembayaran(),
-                barangWrapper.getKeterangan()
+                cart.getKeranjang(),
+                cart.getJenisPembayaran(),
+                cart.getKeterangan()
         );
     }
 

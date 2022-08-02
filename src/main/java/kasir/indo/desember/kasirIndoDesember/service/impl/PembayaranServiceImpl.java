@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,14 +34,17 @@ public class PembayaranServiceImpl implements PembayaranService {
         pembayaran.setIdTransaksi(idTransaksi);
 
         // set total bayar
-        Integer totalBayar = 0;
+        int totalBayar = 0;
 
         Optional<Transaksi> transaksi = transaksiRepository.findById(idTransaksi);
         if (transaksi.isPresent()) {
 
-            List<Barang> listBarang = barangRepository.findAllById(transaksi.get().getIdBarang());
-            for (Barang barang : listBarang) {
-                totalBayar += barang.getHarga();
+            for (Map.Entry<Long, Integer> entryBarang : transaksi.get().getKeranjang().entrySet()) {
+                Barang barang = barangRepository.findById(entryBarang.getKey()).orElseThrow(() -> {
+                    throw new IllegalStateException("Barang dengan ID " + entryBarang.getKey() + " tidak ditemukan!");
+                });
+                int jumlahBeli = entryBarang.getValue();
+                totalBayar += barang.getHarga() * jumlahBeli;
             }
         }
 
@@ -49,7 +53,7 @@ public class PembayaranServiceImpl implements PembayaranService {
         // jenis pembayaran harus berjenis tunai / transfer
         if (pembayaranValid(jenisPembayaran)) {
             pembayaran.setJenisPembayaran(jenisPembayaran);
-            pembayaranRepository.saveAndFlush(pembayaran);
+            pembayaranRepository.save(pembayaran);
         }
     }
 
